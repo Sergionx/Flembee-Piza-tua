@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  lastName  String
+  role     Role   @default(USER) 
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  refreshTokens RefreshToken[]
+}
+
+model RefreshToken {
+  id          String   @id @unique @default(uuid())
+  hashedToken String
+  userId      String
+  revoked     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Unit {
+  KG
+  G
+  L
+  ML
+}
+
+model Ingredient {
+  id          String   @id @default(cuid())
+  name        String
+  stock       Float
+  price       Float
+  unit        Unit
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  pizzas      PizzaIngredient[]
+}
+
+
+model Pizza {
+  id          String      @id @default(cuid())
+  name        String
+  
+  ingredients PizzaIngredient[]
+}
+
+model PizzaIngredient {
+  id          String     @id @default(cuid())
+  quantity    Float
+
+  pizzaId     String
+  ingredientId String
+  pizza       Pizza      @relation(fields: [pizzaId], references: [id])
+  ingredient  Ingredient @relation(fields: [ingredientId], references: [id])
+
+  @@unique([pizzaId, ingredientId])
+}
