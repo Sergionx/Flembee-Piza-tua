@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/derived/password-input";
 
 export const description =
   "A simple login form with email and password. The submit button says 'Sign in'.";
@@ -31,7 +32,7 @@ export function LoginForm() {
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" required />
+          <PasswordInput />
         </div>
       </CardContent>
       <CardFooter>
