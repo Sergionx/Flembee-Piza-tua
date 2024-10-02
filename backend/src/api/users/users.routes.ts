@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, deleteUser, getUsers, updateUser } from "../handlers/users";
+import { createUser, deleteUser, getUsers, updateUser } from "./users-handler";
 
 const router = Router();
 

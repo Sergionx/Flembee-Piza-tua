@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { prisma } from "../config/db";
+import { prisma } from "@/lib/config/db";
 
 
 export async function getUsers(req: Request, res: Response) {
@@ -30,15 +30,15 @@ export async function createUser(req: Request, res: Response) {
   }
 
   try {
-    const newUser = await prisma.user.create({
-      data: {
-        email,
-        name,
-        lastName,
-      },
-    });
+    // const newUser = await prisma.user.create({
+    //   data: {
+    //     email,
+    //     name,
+    //     lastName,
+    //   },
+    // });
 
-    res.json(newUser);
+    // res.json(newUser);
   } catch (error) {
     res
       .status(500)

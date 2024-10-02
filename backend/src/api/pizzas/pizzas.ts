@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { prisma } from "../config/db";
+import { prisma } from "@/lib/config/db";
 
 
 export async function getPizzas(req: Request, res:Response) {
