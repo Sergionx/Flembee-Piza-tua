@@ -80,7 +80,7 @@ const FormItem = React.forwardRef<
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("space-y-2", className)} {...props} />
+      <div ref={ref} className={cn(className)} {...props} />
     </FormItemContext.Provider>
   )
 })
@@ -90,12 +90,17 @@ const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
 >(({ className, ...props }, ref) => {
-  const { error, formItemId } = useFormField()
+  const { isTouched, formItemId, invalid } = useFormField();
+  const hasError = invalid;
+  const isSuccessful = !invalid && isTouched;
 
   return (
     <Label
       ref={ref}
-      className={cn(error && "text-destructive", className)}
+      className={cn("text-gray-500", className, {
+        "text-destructive/80": hasError,
+        "text-success/80": isSuccessful,
+      })}      
       htmlFor={formItemId}
       {...props}
     />
