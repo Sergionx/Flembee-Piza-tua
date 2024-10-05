@@ -1,7 +1,10 @@
 import * as React from "react";
-import type { FieldValues, Path } from "react-hook-form";
+import type { FieldValues } from "react-hook-form";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import type { FloatingLabelInputFieldProps } from "./floating-label-input";
+
 import { Input } from "@/components/ui/input";
 import {
   FormControl,
@@ -12,20 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Button } from "../button";
 
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-
-type FloatingLabelInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  label?: string;
-  containerClassname?: string;
-  labelClassName?: string;
-};
-
-interface FloatingLabelPasswordInputProps<T extends FieldValues>
-  extends FloatingLabelInputProps {
-  name: Path<T>;
-  showErrors?: boolean;
-}
-
 function FloatingLabelPasswordInput<T extends FieldValues>({
   name,
   disabled,
@@ -35,8 +24,9 @@ function FloatingLabelPasswordInput<T extends FieldValues>({
   labelClassName,
   className,
   showErrors = false,
+  showColorsState = true,
   ...props
-}: FloatingLabelPasswordInputProps<T>) {
+}: FloatingLabelInputFieldProps<T>) {
   const [showPassword, setShowPassword] = React.useState(false);
 
   return (
@@ -49,32 +39,35 @@ function FloatingLabelPasswordInput<T extends FieldValues>({
 
         return (
           <FormItem className={cn("relative", containerClassname)}>
-            <FormControl>
-              <Input
-                className={cn(
-                  "block h-auto pb-2.5 pt-5 w-full text-gray-900 border-gray-300 appearance-none outline-none focus:ring-0 focus:border-primary-500 peer",
-                  "hide-password-toggle pr-10",
-                  {
-                    "bg-destructive/10 border-destructive": hasError,
-                    "bg-success/10 border-success": isSuccessful,
-                    "opacity-60": props.readOnly,
-                  },
-                  className
-                )}
-                onChange={(e) => {
-                  if (props.type === "number") {
-                    onChange(Number(e.target.value));
-                  } else {
-                    onChange(e);
-                  }
-                }}
-                placeholder={props.placeholder ?? " "}
-                {...props}
-                {...field}
-                type={showPassword ? "text" : "password"}
-              />
-            </FormControl>
-            
+            <div className="relative">
+              <FormControl>
+                <Input
+                  className={cn(
+                    "block h-auto pb-2.5 pt-5 w-full text-gray-900 border-gray-300 appearance-none outline-none focus:ring-0 focus:border-primary-500 peer",
+                    "hide-password-toggle pr-10",
+                    {
+                      "bg-destructive/10 border-destructive":
+                        hasError && showColorsState,
+                      "bg-success/10 border-success":
+                        isSuccessful && showColorsState,
+                      "opacity-60": props.readOnly,
+                    },
+                    className
+                  )}
+                  onChange={(e) => {
+                    if (props.type === "number") {
+                      onChange(Number(e.target.value));
+                    } else {
+                      onChange(e);
+                    }
+                  }}
+                  placeholder={props.placeholder ?? " "}
+                  {...props}
+                  {...field}
+                  type={showPassword ? "text" : "password"}
+                />
+              </FormControl>
+
               <Button
                 type="button"
                 variant="ghost"
@@ -92,6 +85,7 @@ function FloatingLabelPasswordInput<T extends FieldValues>({
                   {showPassword ? "Hide password" : "Show password"}
                 </span>
               </Button>
+            </div>
 
             <FormLabel
               className={cn(
@@ -104,6 +98,7 @@ function FloatingLabelPasswordInput<T extends FieldValues>({
                 },
                 labelClassName
               )}
+              showColorsState={showColorsState}
             >
               {label}
             </FormLabel>

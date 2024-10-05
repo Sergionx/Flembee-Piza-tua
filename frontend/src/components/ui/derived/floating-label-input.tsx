@@ -18,10 +18,11 @@ type FloatingLabelInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   labelClassName?: string;
 };
 
-interface FloatingLabelInputFieldProps<T extends FieldValues>
+export interface FloatingLabelInputFieldProps<T extends FieldValues>
   extends FloatingLabelInputProps {
   name: Path<T>;
   showErrors?: boolean;
+  showColorsState?: boolean;
 }
 
 function FloatingLabelInputField<T extends FieldValues>({
@@ -33,6 +34,7 @@ function FloatingLabelInputField<T extends FieldValues>({
   labelClassName,
   className,
   showErrors = false,
+  showColorsState = true,
   ...props
 }: FloatingLabelInputFieldProps<T>) {
   return (
@@ -50,9 +52,11 @@ function FloatingLabelInputField<T extends FieldValues>({
                 className={cn(
                   "block h-auto pb-2.5 pt-5 w-full text-gray-900 border-gray-300 appearance-none outline-none focus:ring-0 focus:border-primary-500 peer",
                   {
-                    "bg-destructive/10 border-destructive": hasError,
-                    "bg-success/10 border-success": isSuccessful,
-                    "opacity-60": props.readOnly
+                    "bg-destructive/10 border-destructive":
+                      hasError && showColorsState,
+                    "bg-success/10 border-success":
+                      isSuccessful && showColorsState,
+                    "opacity-60": props.readOnly,
                   },
                   className
                 )}
@@ -76,10 +80,11 @@ function FloatingLabelInputField<T extends FieldValues>({
                   "-translate-y-4 scale-75": props.placeholder,
                   "peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4":
                     !props.placeholder,
-                    "opacity-60": props.readOnly
+                  "opacity-60": props.readOnly,
                 },
                 labelClassName
               )}
+              showColorsState={showColorsState}
             >
               {label}
             </FormLabel>
