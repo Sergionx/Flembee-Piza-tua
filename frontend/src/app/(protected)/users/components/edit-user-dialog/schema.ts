@@ -1,3 +1,4 @@
+import { Role } from "@/lib/interfaces/User";
 import { z } from "zod";
 
 export const editUserSchema = z.object({
@@ -12,7 +13,7 @@ export const editUserSchema = z.object({
   email: z.string().email({
     message: "El email debe ser un email válido",
   }),
-  role: z.enum(["admin", "user"]),
+  role: z.nativeEnum(Role),
 });
 
 export type EditUserSchemaType = z.infer<typeof editUserSchema>;

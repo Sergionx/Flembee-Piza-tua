@@ -3,9 +3,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { editUserSchema, type EditUserSchemaType } from "./schema";
-import type { User } from "@/lib/interfaces/User";
+import { toast } from "@/hooks/use-toast";
+import { login } from "@/lib/api/auth.service";
+import { type User, Role } from "@/lib/interfaces/User";
 
-import { Button } from "@/components/ui/button";
 import {
   DialogContent,
   DialogTitle,
@@ -22,11 +23,19 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { FloatingLabelInputField } from "@/components/ui/derived/floating-label-input";
-import { Spinner } from "@/components/ui/spinner";
+import SubmitButton from "@/components/ui/derived/submit-button";
+import { updateUser } from "@/lib/api/users.service";
 
-export default function EditUserDialog({ user }: { user: User }) {
+export default function EditUserDialog({
+  user,
+  close,
+}: {
+  user: User;
+  close: () => void;
+}) {
   const form = useForm({
     resolver: zodResolver(editUserSchema),
+    mode: "onBlur",
     defaultValues: {
       name: user.name,
       lastName: user.lastName,
@@ -36,7 +45,27 @@ export default function EditUserDialog({ user }: { user: User }) {
   });
 
   // TODO - Submit
-  function onSubmit(data: EditUserSchemaType) {}
+  async function onSubmit(data: EditUserSchemaType) {
+    try {
+      const updatedUser = await updateUser(user.id, data);
+
+      const fullName = `${updatedUser.name} ${updatedUser.lastName}`;
+
+      toast({
+        variant: "success",
+        title: "Creación de usuario exitosa",
+        description: `Ha creado al usuario: ${fullName}`,
+      });
+
+      close();
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error al editar al usuario",
+        description: error.message,
+      });
+    }
+  }
 
   return (
     <DialogContent className="sm:max-w-2xl">
@@ -80,9 +109,9 @@ export default function EditUserDialog({ user }: { user: User }) {
                   <FormLabel>Admin?</FormLabel>
                   <FormControl>
                     <Switch
-                      checked={value === "admin"}
+                      checked={value === Role.ADMIN}
                       onCheckedChange={(checked) => {
-                        onChange(checked ? "admin" : "user");
+                        onChange(checked ? Role.ADMIN : Role.USER);
                       }}
                       size="sm"
                       {...field}
@@ -94,17 +123,9 @@ export default function EditUserDialog({ user }: { user: User }) {
           </fieldset>
 
           <DialogFooter>
-            <Button
-              type="submit"
-              className="gap-x-2"
-              disabled={form.formState.isSubmitting}
-            >
-              <Spinner
-                className="text-white"
-                show={form.formState.isSubmitting}
-              />
+            <SubmitButton isSubmitting={form.formState.isSubmitting}>
               Editar usuario
-            </Button>
+            </SubmitButton>
           </DialogFooter>
         </form>
       </Form>
