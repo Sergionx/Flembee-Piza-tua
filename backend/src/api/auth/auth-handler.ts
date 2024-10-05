@@ -3,7 +3,7 @@ import { type JwtPayload, verify } from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import { compare } from "bcrypt";
 
-import { hashToken } from "@/lib/utils";
+import { getUser_NoPassword, hashToken } from "@/lib/utils";
 import { generateTokens } from "@/lib/config/jwt";
 
 import {
@@ -21,14 +21,18 @@ export async function register(req: Request, res: Response) {
   const { email, password, confirmPassword, name, lastName, role } = req.body;
   // TODO - Mejorar las validaciones de todo esto
   if (!email || !password) {
-    res
-      .status(400)
-      .json({ message: "You must provide an email and a password." });
+    res.status(400).json({ message: "Debes proveer un email y contraseña" });
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    res.status(400).json({ error: "Formato del email inválido" });
     return;
   }
 
   if (password !== confirmPassword) {
-    res.status(400).json({ message: "Passwords do not match." });
+    res.status(400).json({ message: "Las contraseñas no son iguales" });
     return;
   }
 
@@ -36,7 +40,7 @@ export async function register(req: Request, res: Response) {
     const existingUser = await findUserByEmail(email);
 
     if (existingUser) {
-      res.status(400).json({ message: "Email already in use." });
+      res.status(400).json({ message: "Ya existe un usuario con ese email" });
       return;
     }
 
@@ -54,19 +58,20 @@ export async function register(req: Request, res: Response) {
     res.json({
       accessToken,
       refreshToken,
+      user: getUser_NoPassword(user),
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "An error occurred while registering." });
+    res
+      .status(500)
+      .json({ message: "Ocurrió un error inesperado al registrarse" });
   }
 }
 
 export async function login(req: Request, res: Response) {
   const { email, password } = req.body;
   if (!email || !password) {
-    res
-      .status(400)
-      .json({ message: "You must provide an email and a password." });
+    res.status(400).json({ message: "Debes proveer un email y contraseña" });
     return;
   }
 
@@ -74,13 +79,13 @@ export async function login(req: Request, res: Response) {
     const existingUser = await findUserByEmail(email);
 
     if (!existingUser) {
-      res.status(403);
-      throw new Error("Invalid login credentials.");
+      res.status(403).json({ message: "Credenciales inválidas" });
+      return;
     }
 
     const validPassword = await compare(password, existingUser.password);
     if (!validPassword) {
-      res.status(403).json({ message: "Invalid login credentials." });
+      res.status(403).json({ message: "Credenciales inválidas" });
       return;
     }
 
@@ -95,9 +100,12 @@ export async function login(req: Request, res: Response) {
     res.json({
       accessToken,
       refreshToken,
+      user: getUser_NoPassword(existingUser),
     });
   } catch (err) {
-    res.status(500).json({ message: "An error occurred while logging in." });
+    res
+      .status(500)
+      .json({ message: "Un error inesperado ocurrió al iniciar sesión" });
   }
 }
 
