@@ -1,90 +1,57 @@
 import type { Request, Response } from "express";
+import { getUser_NoPassword } from "@/lib/utils";
 import { prisma } from "@/lib/config/db";
 
+import { findUserById, getAllUsers, updateUser } from "./user.service";
 
 export async function getUsers(req: Request, res: Response) {
-  const allUsers = await prisma.user.findMany();
+  const allUsers = await getAllUsers();
 
   res.json(allUsers);
 }
 
-// TODO - Poner el return
-export async function createUser(req: Request, res: Response) {
-  const { email, name, lastName } = req.body;
+export async function getUserById(req: Request, res: Response) {
+  const { id } = req.params;
+
+  const user = await findUserById(id);
+
+  res.json(user ? getUser_NoPassword(user) : null);
+}
+
+// TODO - Encapsular logica de validación
+export async function updateUserHandler(req: Request, res: Response) {
+  const { id } = req.params;
+  const { email, name, lastName, role } = req.body;
 
   if (name.length < 4) {
-    console.log("Name must be at least 4 characters long");
-    res.status(400).json({ error: "Name must be at least 4 characters long" });
+    res
+      .status(400)
+      .json({ message: "El nombre debe ser 4 caracteres como mínimo" });
+    return;
   }
-  console.log("Pasó la validación de name");
 
   if (lastName.length < 4) {
     res
       .status(400)
-      .json({ error: "Last name must be at least 4 characters long" });
+      .json({ error: "El apellido debe ser 4 caracteres como mínimo" });
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    res.status(400).json({ error: "Invalid email format" });
+    res.status(400).json({ error: "Formato del email inválido" });
+    return;
   }
 
   try {
-    // const newUser = await prisma.user.create({
-    //   data: {
-    //     email,
-    //     name,
-    //     lastName,
-    //   },
-    // });
+    const updatedUser = await updateUser(id, { email, name, lastName, role });
+    console.log(updateUser)
 
-    // res.json(newUser);
+    res.json(updatedUser);
   } catch (error) {
     res
       .status(500)
-      .json({ error: "An error occurred while creating the user" });
+      .json({ error: "An error occurred while updating the user" });
   }
-}
-
-// TODO - Encapsular logica de validación
-export async function updateUser(req: Request, res: Response) {
-    const { id } = req.params;
-    const { email, name, lastName } = req.body;
-  
-    if (name.length < 4) {
-      res.status(400).json({ error: "Name must be at least 4 characters long" });
-    }
-  
-    if (lastName.length < 4) {
-      res
-        .status(400)
-        .json({ error: "Last name must be at least 4 characters long" });
-    }
-  
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      res.status(400).json({ error: "Invalid email format" });
-    }
-  
-    try {
-      const updatedUser = await prisma.user.update({
-        where: {
-          id: id,
-        },
-        data: {
-          email,
-          name,
-          lastName,
-        },
-      });
-  
-      res.json(updatedUser);
-    } catch (error) {
-      res
-        .status(500)
-        .json({ error: "An error occurred while updating the user" });
-    }
-  
 }
 
 export async function deleteUser(req: Request, res: Response) {

@@ -25,3 +25,27 @@ export function findUserById(id: string) {
     },
   });
 }
+
+export function getAllUsers(){
+  return prisma.user.findMany({
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      lastName: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+}
+
+type  UpdateUser =  Partial<Omit<CreateUser, "password">>;
+export function updateUser(id: string, user: UpdateUser) {
+  return prisma.user.update({
+    where: {
+      id,
+    },
+    data: user,
+  });
+}
