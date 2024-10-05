@@ -1,4 +1,18 @@
+import { Role } from "@/lib/interfaces/User";
 import { z } from "zod";
+
+export const passwordSchema = z
+  .string()
+  .min(6, { message: "La contraseña debe tener al menos 6 caracteres" })
+  .regex(/[A-Z]/, {
+    message: "La contraseña debe tener al menos una letra mayúscula",
+  })
+  .regex(/[a-z]/, {
+    message: "La contraseña debe tener al menos una letra minúscula",
+  })
+  .regex(/[0-9]/, {
+    message: "La contraseña debe tener al menos un número",
+  });
 
 export const createUserSchema = z
   .object({
@@ -13,22 +27,11 @@ export const createUserSchema = z
     email: z.string().email({
       message: "El email debe ser un email válido",
     }),
-    password: z
-      .string()
-      .min(6, { message: "La contraseña debe tener al menos 6 caracteres" })
-      .regex(/[A-Z]/, {
-        message: "La contraseña debe tener al menos una letra mayúscula",
-      })
-      .regex(/[a-z]/, {
-        message: "La contraseña debe tener al menos una letra minúscula",
-      })
-      .regex(/[0-9]/, {
-        message: "La contraseña debe tener al menos un número",
-      }),
+    password: passwordSchema,
     confirmPassword: z.string().min(1, {
       message: "Este campo es requerido",
     }),
-    role: z.enum(["admin", "user"]),
+    role: z.nativeEnum(Role),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Las contraseñas no coinciden",
@@ -43,5 +46,5 @@ export const defaultValues: CreateUserSchemaType = {
   email: "",
   password: "",
   confirmPassword: "",
-  role: "user",
+  role: Role.USER,
 };

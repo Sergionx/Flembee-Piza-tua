@@ -7,8 +7,10 @@ import {
   defaultValues,
   type CreateUserSchemaType,
 } from "./schema";
+import { toast } from "@/hooks/use-toast";
+import { register } from "@/lib/api/auth.service";
+import { Role } from "@/lib/interfaces/User";
 
-import { Button } from "@/components/ui/button";
 import {
   DialogContent,
   DialogTitle,
@@ -26,19 +28,50 @@ import {
 } from "@/components/ui/form";
 import { FloatingLabelInputField } from "@/components/ui/derived/floating-label-input";
 import { FloatingLabelPasswordInput } from "@/components/ui/derived/floating-label-password-input";
-import { Spinner } from "@/components/ui/spinner";
+import SubmitButton from "@/components/ui/derived/submit-button";
 
-export default function CreateUserDialog() {
+export default function CreateUserDialog({
+  close,
+}: {
+  close: () => void;
+}) {
   const form = useForm({
     resolver: zodResolver(createUserSchema),
+    mode: "onBlur",
     defaultValues: defaultValues,
   });
 
-  // TODO - Submit
-  function onSubmit(data: CreateUserSchemaType) {}
+
+  async function onSubmit(data: CreateUserSchemaType) {
+    try {
+      const result = await register(data);
+
+      const token = {
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+      };
+
+      const fullName = `${result.user.name} ${result.user.lastName}`;
+
+      toast({
+        variant: "success",
+        title: "Creación de usuario exitosa",
+        description: `Ha creado al usuario: ${fullName}`,
+      });
+
+      close();
+
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error al crear al usuario",
+        description: error.message,
+      });
+    }
+  }
 
   return (
-    <DialogContent className="sm:max-w-2xl">
+    <DialogContent className="sm:max-w-2xl" >
       <DialogHeader>
         <DialogTitle>Crea un usuario</DialogTitle>
         <DialogDescription>
@@ -80,9 +113,9 @@ export default function CreateUserDialog() {
                   <FormLabel>Admin?</FormLabel>
                   <FormControl>
                     <Switch
-                      checked={value === "admin"}
+                      checked={value === Role.ADMIN}
                       onCheckedChange={(checked) => {
-                        onChange(checked ? "admin" : "user");
+                        onChange(checked ? Role.ADMIN : Role.USER);
                       }}
                       size="sm"
                       {...field}
@@ -110,17 +143,9 @@ export default function CreateUserDialog() {
           </fieldset>
 
           <DialogFooter>
-            <Button
-              type="submit"
-              className="gap-x-2"
-              disabled={form.formState.isSubmitting}
-            >
-              <Spinner
-                className="text-white"
-                show={form.formState.isSubmitting}
-              />
+            <SubmitButton isSubmitting={form.formState.isSubmitting}>
               Crear usuario
-            </Button>
+            </SubmitButton>
           </DialogFooter>
         </form>
       </Form>
