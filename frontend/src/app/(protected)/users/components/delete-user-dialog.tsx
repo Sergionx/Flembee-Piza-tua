@@ -13,9 +13,22 @@ import {
 } from "@/components/ui/dialog";
 
 import { Spinner } from "@/components/ui/spinner";
+import useSimpleMutation from "@/hooks/useSimpleMutation";
+import { deleteUser } from "@/lib/api/users.service";
+import SubmitButton from "@/components/ui/derived/submit-button";
 
-export default function DeleteUserDialog({ user }: { user: User }) {
+export default function DeleteUserDialog({
+  user,
+  close,
+}: {
+  user: User;
+  close: () => void;
+}) {
   // TODO - Considerar usar react query para las mutaciones o simplemente usar un loading state
+
+  const { loading, mutate } = useSimpleMutation({
+    fn: () => deleteUser(user.id),
+  });
 
   return (
     <DialogContent className="sm:max-w-2xl">
@@ -33,13 +46,18 @@ export default function DeleteUserDialog({ user }: { user: User }) {
             Cancelar
           </Button>
         </DialogClose>
-        <Button type="submit" className="gap-x-2" variant="destructive">
-          {/* <Spinner
-                className="text-white"
-                show={form.formState.isSubmitting}
-              /> */}
+
+        <SubmitButton
+          isSubmitting={loading}
+          type="button"
+          variant="destructive"
+          onClick={async () => {
+            await mutate()
+            close()
+          }}
+        >
           Eliminar
-        </Button>
+        </SubmitButton>
       </DialogFooter>
     </DialogContent>
   );

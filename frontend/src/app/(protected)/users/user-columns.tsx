@@ -145,7 +145,10 @@ export const columns: ColumnDef<User>[] = [
                 close={() => setCurrentDialog(null)}
               />
             ) : (
-              <DeleteUserDialog user={user} />
+              <DeleteUserDialog
+                user={user}
+                close={() => setCurrentDialog(null)}
+              />
             )}
           </DropdownMenu>
         </Dialog>
