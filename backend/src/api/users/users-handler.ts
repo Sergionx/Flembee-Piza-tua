@@ -44,7 +44,6 @@ export async function updateUserHandler(req: Request, res: Response) {
 
   try {
     const updatedUser = await updateUser(id, { email, name, lastName, role });
-    console.log(updateUser)
 
     res.json(updatedUser);
   } catch (error) {
