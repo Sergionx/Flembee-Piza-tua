@@ -1,57 +1,115 @@
-import Link from "next/link"
+"use client";
+import Link from "next/link";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
-import { Button } from "@/components/ui/button"
+import { defaultValues, registerSchema, RegisterSchemaType } from "./schema";
+import { toast } from "@/hooks/use-toast";
+import { register } from "@/lib/api/auth.service";
+import { useAuth } from "@/context/auth-context";
+import { Role } from "@/lib/interfaces/User";
+
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-
-export const description =
-  "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account"
+} from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
+import { FloatingLabelInputField } from "@/components/ui/derived/floating-label-input";
+import { FloatingLabelPasswordInput } from "@/components/ui/derived/floating-label-password-input";
+import SubmitButton from "@/components/ui/derived/submit-button";
 
 export function SignUpForm() {
+  const form = useForm({
+    resolver: zodResolver(registerSchema),
+    defaultValues: defaultValues,
+    mode: "onChange",
+  });
+
+  const { login } = useAuth();
+
+  async function onSubmit(data: RegisterSchemaType) {
+    try {
+      const result = await register({
+        ...data,
+        role: Role.ADMIN,
+      });
+
+      const token = {
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+      };
+
+      const fullName = `${result.user.name} ${result.user.lastName}`;
+
+      toast({
+        variant: "success",
+        title: "Inicio de sesión exitoso",
+        description: `Bienvenido, ${fullName}`,
+      });
+
+      login(token, result.user);
+
+      // TODO - Redireccionar y guardar el token
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error al iniciar sesión",
+        description: error.message,
+      });
+    }
+  }
+
   return (
-    <Card className="mx-auto max-w-sm">
+    <Card className="mx-auto max-w-lg">
       <CardHeader>
-        <CardTitle className="text-xl">Sign Up</CardTitle>
+        <CardTitle className="text-xl">Registrar admin</CardTitle>
         <CardDescription>
-          Enter your information to create an account
+          Ingresa los datos de tu cuenta para crear la cuenta de admin
         </CardDescription>
       </CardHeader>
+
       <CardContent>
-        <div className="grid gap-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="first-name">First name</Label>
-              <Input id="first-name" placeholder="Max" required />
+        <Form {...form}>
+          <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="grid grid-cols-2 gap-4">
+              <FloatingLabelInputField name="name" label="Nombre" showErrors />
+              <FloatingLabelInputField
+                name="lastName"
+                label="Apellido"
+                showErrors
+              />
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="last-name">Last name</Label>
-              <Input id="last-name" placeholder="Robinson" required />
-            </div>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
+            <FloatingLabelInputField
               type="email"
-              placeholder="m@example.com"
-              required
+              name="email"
+              label="Email"
+              showErrors
             />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" />
-          </div>
-          <Button type="submit" className="w-full">
-            Crea una cuenta
-          </Button>
-        </div>
+            <div className="grid grid-cols-2 gap-4">
+              <FloatingLabelPasswordInput
+                name="password"
+                label="Contraseña"
+                showErrors
+              />
+
+              <FloatingLabelPasswordInput
+                name="confirmPassword"
+                label="Confirmar Contraseña"
+                showErrors
+              />
+            </div>
+
+            <SubmitButton
+              isSubmitting={form.formState.isSubmitting}
+              className="w-full"
+            >
+              Crear cuenta
+            </SubmitButton>
+          </form>
+        </Form>
 
         <div className="mt-4 text-center text-sm">
           Ya tienes una cuenta?{" "}
@@ -61,5 +119,5 @@ export function SignUpForm() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,6 +1,14 @@
+"use client";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "@/components/ui/button";
+import { defaultValues, loginSchema, type LoginSchemaType } from "./schema";
+
+import { toast } from "@/hooks/use-toast";
+import { login } from "@/lib/api/auth.service";
+import { useAuth } from "@/context/auth-context";
+
 import {
   Card,
   CardContent,
@@ -9,41 +17,91 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { PasswordInput } from "@/components/ui/derived/password-input";
+import { FloatingLabelPasswordInput } from "@/components/ui/derived/floating-label-password-input";
+import { Form } from "@/components/ui/form";
+import { FloatingLabelInputField } from "@/components/ui/derived/floating-label-input";
+import SubmitButton from "@/components/ui/derived/submit-button";
 
-export const description =
-  "A simple login form with email and password. The submit button says 'Sign in'.";
+
 
 export function LoginForm() {
+  const form = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: defaultValues,
+  });
+
+  const { login: saveLoginData } = useAuth();
+
+  async function onSubmit(data: LoginSchemaType) {
+    try {
+      const result = await login(data.email, data.password);
+
+      const token = {
+        accessToken: result.accessToken,
+        refreshToken: result.refreshToken,
+      };
+      const fullName = `${result.user.name} ${result.user.lastName}`;
+
+      toast({
+        variant: "success",
+        title: "Inicio de sesión exitoso",
+        description: `Bienvenido, ${fullName}`,
+      })
+      saveLoginData(token, result.user);
+
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error al iniciar sesión",
+        description: error.message,
+      })
+    }
+  }
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account.
+          Ingresa tu email y contraseña para acceder a tu cuenta.
         </CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-4">
-        <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" required />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="password">Password</Label>
-          <PasswordInput />
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button className="w-full">Sign in</Button>
-      </CardFooter>
-      <div className="mt-4 pb-4 text-center text-sm">
-        Aún no tienes una cuenta?{" "}
-        <Link href="/register" className="underline">
-          Regístrate
-        </Link>
-      </div>
+
+      <Form {...form}>
+        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+          <CardContent className="grid gap-4">
+            <FloatingLabelInputField
+              type="email"
+              name="email"
+              label="Email"
+              showErrors
+              showColorsState={false}
+            />
+            <FloatingLabelPasswordInput
+              name="password"
+              label="Contraseña"
+              containerClassname="w-full"
+              showErrors
+              showColorsState={false}
+            />
+          </CardContent>
+
+          <CardFooter>
+            <SubmitButton
+              className="w-full"
+              isSubmitting={form.formState.isSubmitting}
+            >
+              Iniciar sesión
+            </SubmitButton>
+          </CardFooter>
+          <div className="mt-4 pb-4 text-center text-sm">
+            Aún no tienes una cuenta?{" "}
+            <Link href="/register" className="underline">
+              Regístrate
+            </Link>
+          </div>
+        </form>
+      </Form>
     </Card>
   );
 }
