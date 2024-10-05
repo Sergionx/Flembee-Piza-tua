@@ -2,6 +2,16 @@ import { prisma } from "@/lib/config/db";
 import { hashSync } from "bcrypt";
 import type { User } from "@prisma/client";
 
+const select_UserNoPassword = {
+  id: true,
+  email: true,
+  name: true,
+  lastName: true,
+  role: true,
+  createdAt: true,
+  updatedAt: true,
+};
+
 export function findUserByEmail(email: string) {
   return prisma.user.findUnique({
     where: {
@@ -26,26 +36,19 @@ export function findUserById(id: string) {
   });
 }
 
-export function getAllUsers(){
+export function getAllUsers() {
   return prisma.user.findMany({
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      lastName: true,
-      role: true,
-      createdAt: true,
-      updatedAt: true,
-    },
+    select: select_UserNoPassword,
   });
 }
 
-type  UpdateUser =  Partial<Omit<CreateUser, "password">>;
+type UpdateUser = Partial<Omit<CreateUser, "password">>;
 export function updateUser(id: string, user: UpdateUser) {
   return prisma.user.update({
     where: {
       id,
     },
     data: user,
+    select: select_UserNoPassword,
   });
 }
