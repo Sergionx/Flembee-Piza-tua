@@ -52,6 +52,7 @@ export default function CreateIngredientDialog({
         description: `Ha creado el ingrediente ${data.name}`,
       });
 
+      form.reset();
       close();
     } catch (error: any) {
       toast({

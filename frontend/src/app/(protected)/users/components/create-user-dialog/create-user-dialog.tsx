@@ -54,8 +54,8 @@ export default function CreateUserDialog({
         description: `Ha creado al usuario: ${fullName}`,
       });
 
+      form.reset();
       close();
-
     } catch (error: any) {
       toast({
         variant: "destructive",

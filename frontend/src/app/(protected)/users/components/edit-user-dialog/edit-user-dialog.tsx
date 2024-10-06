@@ -57,6 +57,7 @@ export default function EditUserDialog({
         description: `Ha creado al usuario: ${fullName}`,
       });
 
+      form.reset();
       close();
     } catch (error: any) {
       toast({
