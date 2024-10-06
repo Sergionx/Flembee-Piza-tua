@@ -1,6 +1,7 @@
 "use client";
 
-import type { User } from "@/lib/interfaces/User";
+import useSimpleMutation from "@/hooks/useSimpleMutation";
+import { deleteUser } from "@/lib/api/users.service";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -11,11 +12,9 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-
-import { Spinner } from "@/components/ui/spinner";
-import useSimpleMutation from "@/hooks/useSimpleMutation";
-import { deleteUser } from "@/lib/api/users.service";
 import SubmitButton from "@/components/ui/derived/submit-button";
+
+import type { User } from "@/lib/interfaces/User";
 
 export default function DeleteUserDialog({
   user,
@@ -24,8 +23,6 @@ export default function DeleteUserDialog({
   user: User;
   close: () => void;
 }) {
-  // TODO - Considerar usar react query para las mutaciones o simplemente usar un loading state
-
   const { loading, mutate } = useSimpleMutation({
     fn: () => deleteUser(user.id),
   });
@@ -42,7 +39,7 @@ export default function DeleteUserDialog({
 
       <DialogFooter>
         <DialogClose asChild>
-          <Button type="submit" className="gap-x-2" variant="outline">
+          <Button className="gap-x-2" variant="outline">
             Cancelar
           </Button>
         </DialogClose>
@@ -52,8 +49,8 @@ export default function DeleteUserDialog({
           type="button"
           variant="destructive"
           onClick={async () => {
-            await mutate()
-            close()
+            await mutate();
+            close();
           }}
         >
           Eliminar

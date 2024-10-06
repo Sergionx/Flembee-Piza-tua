@@ -46,11 +46,6 @@ export default function CreateUserDialog({
     try {
       const result = await register(data);
 
-      const token = {
-        accessToken: result.accessToken,
-        refreshToken: result.refreshToken,
-      };
-
       const fullName = `${result.user.name} ${result.user.lastName}`;
 
       toast({
