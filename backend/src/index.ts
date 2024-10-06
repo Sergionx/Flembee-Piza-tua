@@ -1,7 +1,8 @@
 import express from 'express'
 import 'tsconfig-paths/register';
 
-import pizzaRoutes from '@/api/pizzas/pizzas.routes'
+import ingredientRoutes from '@/api/pizzas/ingredients/ingredients.routes'
+import pizzaRoutes from '@/api/pizzas/pizzas/pizzas.routes'
 import userRoutes from '@/api/users/users.routes'
 import authRoutes from '@/api/auth/auth.routes'
 
@@ -11,6 +12,7 @@ const app = express()
 
 app.use(express.json())
 
+app.use('/api/ingredients', ingredientRoutes)
 app.use('/api/pizzas', pizzaRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/auth', authRoutes)
