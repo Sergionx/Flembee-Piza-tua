@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUsers, getUserById, updateUserHandler, deleteUser } from "./users-handler";
+import { getUsers, getUserById, updateUserHandler, deleteUserHandler } from "./users-handler";
 
 const router = Router();
 
@@ -7,6 +7,6 @@ router.get("/", getUsers);
 
 router.get("/:id", getUserById);
 router.put("/:id", updateUserHandler);
-router.delete("/:id", deleteUser);
+router.delete("/:id", deleteUserHandler);
 
 export default router;

@@ -52,3 +52,11 @@ export function updateUser(id: string, user: UpdateUser) {
     select: select_UserNoPassword,
   });
 }
+
+export function deleteUser(id: string) {
+  return prisma.user.delete({
+    where: {
+      id: id,
+    },
+  });
+}

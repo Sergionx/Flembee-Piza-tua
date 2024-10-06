@@ -1,8 +1,12 @@
 import type { Request, Response } from "express";
 import { getUser_NoPassword } from "@/lib/utils";
-import { prisma } from "@/lib/config/db";
 
-import { findUserById, getAllUsers, updateUser } from "./user.service";
+import {
+  deleteUser,
+  findUserById,
+  getAllUsers,
+  updateUser,
+} from "./user.service";
 
 export async function getUsers(req: Request, res: Response) {
   const allUsers = await getAllUsers();
@@ -53,16 +57,11 @@ export async function updateUserHandler(req: Request, res: Response) {
   }
 }
 
-export async function deleteUser(req: Request, res: Response) {
+export async function deleteUserHandler(req: Request, res: Response) {
   const { id } = req.params;
 
   try {
-    await prisma.user.delete({
-      where: {
-        id: id,
-      },
-    });
-
+    await deleteUser(id);
     res.json({ message: "User deleted" });
   } catch (error) {
     res
