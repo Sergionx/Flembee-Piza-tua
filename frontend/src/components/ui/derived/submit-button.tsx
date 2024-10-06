@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "../button";
 import { Spinner } from "../spinner";
 
-interface Props extends Omit<React.ComponentProps<typeof Button>, "type"> {
+interface Props extends React.ComponentProps<typeof Button> {
   isSubmitting: boolean;
 }
 
