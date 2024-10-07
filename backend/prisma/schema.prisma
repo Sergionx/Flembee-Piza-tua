@@ -73,11 +73,12 @@ model Pizza {
 model PizzaIngredient {
   id          String     @id @default(cuid())
   quantity    Float
+  unit        Unit
 
   pizzaId     String
   ingredientId String
-  pizza       Pizza      @relation(fields: [pizzaId], references: [id])
-  ingredient  Ingredient @relation(fields: [ingredientId], references: [id])
+  pizza       Pizza      @relation(fields: [pizzaId], references: [id], onDelete: Cascade)
+  ingredient  Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
 
   @@unique([pizzaId, ingredientId])
 }
