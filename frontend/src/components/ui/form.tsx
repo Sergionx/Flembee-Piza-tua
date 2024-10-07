@@ -96,9 +96,9 @@ const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   FormLabelProps
 >(({ className, showColorsState = true, ...props }, ref) => {
-  const { isTouched, formItemId, invalid } = useFormField();
+  const { isTouched, formItemId, invalid, isDirty } = useFormField();
   const hasError = invalid;
-  const isSuccessful = !invalid && isTouched;
+  const isSuccessful = !invalid && isTouched && isDirty
 
   return (
     <Label
