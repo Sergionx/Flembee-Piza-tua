@@ -20,4 +20,5 @@ export interface PizzaIngredient {
   pizzaId: string
   ingredientId: string
   quantity: number
+  unit: Unit
 }
