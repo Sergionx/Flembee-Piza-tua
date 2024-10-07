@@ -13,7 +13,7 @@ export default function CreateIngredientDialogRoot() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="success" className="ml-auto">
+        <Button variant="success">
           <Plus className="w-6 h-6 mr-2" />
           Crear Ingrediente
         </Button>

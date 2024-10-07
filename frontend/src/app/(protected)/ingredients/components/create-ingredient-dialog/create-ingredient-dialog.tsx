@@ -42,14 +42,13 @@ export default function CreateIngredientDialog({
   });
 
   async function onSubmit(data: CreateIngredientSchemaType) {
-    console.log(data)
     try {
       const result = await createIngredient(data);
 
       toast({
         variant: "success",
         title: "Creación de ingrediente exitosa",
-        description: `Ha creado el ingrediente ${data.name}`,
+        description: `Ha creado el ingrediente ${result.name}`,
       });
 
       form.reset();
@@ -96,7 +95,6 @@ export default function CreateIngredientDialog({
               name="stock"
               type="number"
               label="Stock"
-              min={0}
               containerClassname="w-full"
               showErrors={true}
             />

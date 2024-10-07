@@ -34,10 +34,10 @@ export async function getIngredientByIdHandler(req: Request, res: Response) {
 export async function createIngredientHandler(req: Request, res: Response) {
   const { name, stock, price, unit } = req.body;
 
-  if (name.length < 4) {
+  if (name.length < 3) {
     res
       .status(400)
-      .json({ message: "El nombre debe ser 4 caracteres como mínimo" });
+      .json({ message: "El nombre debe ser 3 caracteres como mínimo" });
     return;
   }
 
@@ -57,6 +57,7 @@ export async function createIngredientHandler(req: Request, res: Response) {
   }
 }
 
+//TODO - Tomar en cuenta que pasa cuando se actualiza una unidad
 export async function updateIngredientHandler(req: Request, res: Response) {
   const { id } = req.params;
   const { name, stock, price, unit } = req.body;
