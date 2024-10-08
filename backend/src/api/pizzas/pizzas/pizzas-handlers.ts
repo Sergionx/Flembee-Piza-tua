@@ -1,10 +1,32 @@
 import type { Request, Response } from "express";
-import { createPizza, deletePizza, getAllPizzas } from "./pizza.service";
+import {
+  createPizza,
+  deletePizza,
+  getAllPizzas,
+  getPizzaById,
+} from "./pizza.service";
 
 export async function getPizzas(req: Request, res: Response) {
   const allPizzas = await getAllPizzas();
 
   res.json(allPizzas);
+}
+
+export async function getPizzaByIdHandler(req: Request, res: Response) {
+  const { id } = req.params;
+
+  try {
+    const pizza = await getPizzaById(id);
+
+    if (!pizza) {
+      res.status(404).json({ message: "Pizza no encontrada" });
+      return;
+    }
+
+    res.json(pizza);
+  } catch (error) {
+    res.status(500).json({ error: "Ocurrió un error al buscar la pizza" });
+  }
 }
 
 export async function createPizzaHandler(req: Request, res: Response) {
@@ -48,10 +70,8 @@ export async function deletePizzaHandler(req: Request, res: Response) {
     res.json({ message: "Pizza eliminada correctamente" });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        error: "Ocurrió un error al eliminar la pizza, intenta de nuevo",
-      });
+    res.status(500).json({
+      error: "Ocurrió un error al eliminar la pizza, intenta de nuevo",
+    });
   }
 }
