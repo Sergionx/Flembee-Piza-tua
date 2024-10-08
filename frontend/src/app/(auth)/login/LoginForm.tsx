@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -48,7 +49,7 @@ export function LoginForm() {
         description: `Bienvenido, ${fullName}`,
       })
       saveLoginData(token, result.user);
-
+      redirect("/users");
     } catch (error: any) {
       toast({
         variant: "destructive",

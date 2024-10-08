@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { redirect } from "next/navigation";
 
 import { defaultValues, registerSchema, RegisterSchemaType } from "./schema";
 import { toast } from "@/hooks/use-toast";
@@ -51,8 +52,7 @@ export function SignUpForm() {
       });
 
       login(token, result.user);
-
-      // TODO - Redireccionar y guardar el token
+      redirect("/users");
     } catch (error: any) {
       toast({
         variant: "destructive",
