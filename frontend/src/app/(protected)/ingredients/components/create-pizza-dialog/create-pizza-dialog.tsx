@@ -66,7 +66,7 @@ export default function CreatePizzaDialog({
         description: `Ha creado la pizza ${result.name}`,
       });
 
-      // form.reset();
+      form.reset();
       close();
     } catch (error: any) {
       toast({
@@ -76,8 +76,6 @@ export default function CreatePizzaDialog({
       });
     }
   }
-
-  // console.log(form.formState.errors, form.watch("ingredients"));
 
   return (
     <DialogContent className="sm:max-w-2xl max-h-[70vh] overflow-y-auto">

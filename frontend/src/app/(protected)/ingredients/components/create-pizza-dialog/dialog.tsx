@@ -20,9 +20,10 @@ export default function CreatePizzaDialogRoot({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="text-success">
-          <Plus className="w-6 h-6 mr-2" />
-          Crear Receta de Pizza
+        <Button variant="outline" className="text-success gap-x-2">
+          <Plus className="w-6 h-6" />
+          <span className="max-sm:hidden">Crear Receta de Pizza</span>
+          <span className="sm:hidden">Receta</span>
         </Button>
       </DialogTrigger>
       <CreatePizzaDialog ingredientsOption={ingredientsOption} close={() => setOpen(false)} />

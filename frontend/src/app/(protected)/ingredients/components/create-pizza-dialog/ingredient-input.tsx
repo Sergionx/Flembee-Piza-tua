@@ -27,7 +27,7 @@ interface Props {
   lenFields: number;
 }
 
-// FIXME - Debuggear que al darle al + luego de seleccionar, el input se convierte en el value (id)
+// TODO - Add hover par ver los errores
 export default function IngredientInput({
   index,
   ingredientsOptions,
@@ -36,7 +36,6 @@ export default function IngredientInput({
 }: Props) {
   const ingredientName = `ingredients.${index}`;
 
-  // console.log("Render IngredientInput ", index);
   return (
     <fieldset className="flex flex-row max-sm:flex-wrap gap-4 items-center">
       <AutocompleteInputField
