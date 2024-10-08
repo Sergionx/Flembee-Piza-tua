@@ -34,6 +34,24 @@ export async function createIngredient(ingredient: CreateIngredient){
   return data as Ingredient;
 }
 
+export async function updateIngredient(id: string, ingredient: CreateIngredient){
+  const response = await customFetch(`ingredients/${id}`, {
+    method: "PUT",
+    next: {
+      tags: ["ingredients"],
+    },
+    body: JSON.stringify(ingredient)
+  });
+
+  if (response.ok) {
+    revalidateTag("ingredients");
+  }
+
+  const data = await response.json();
+
+  return data as Ingredient;
+}
+
 export async function deleteIngredient(id: string){
   const response = await customFetch(`ingredients/${id}`, {
     method: "DELETE",
