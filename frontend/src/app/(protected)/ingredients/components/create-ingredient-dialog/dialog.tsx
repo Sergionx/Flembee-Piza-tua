@@ -13,9 +13,9 @@ export default function CreateIngredientDialogRoot() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="success">
-          <Plus className="w-6 h-6 mr-2" />
-          Crear Ingrediente
+        <Button variant="success" className="gap-x-2">
+          <Plus className="w-6 h-6" />
+          <span className="max-sm:hidden">Crear Ingrediente</span>
         </Button>
       </DialogTrigger>
       <CreateIngredientDialog close={() => setOpen(false)} />

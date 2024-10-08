@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/select";
 
 import { Unit, type Ingredient } from "@/lib/interfaces/Ingredient";
+import { updateIngredient } from "@/lib/api/ingredients.service";
 
 export default function EditIngredientDialog({
   ingredient,
@@ -53,14 +54,13 @@ export default function EditIngredientDialog({
   });
 
   async function onSubmit(data: CreateIngredientSchemaType) {
-    console.log(data);
     try {
-      // const result = await createIngredient(data);
+      const result = await updateIngredient(ingredient.id, data);
 
       toast({
         variant: "success",
         title: "Creación de ingrediente exitosa",
-        description: `Ha creado el ingrediente ${data.name}`,
+        description: `Ha creado el ingrediente ${result.name}`,
       });
 
       form.reset();
