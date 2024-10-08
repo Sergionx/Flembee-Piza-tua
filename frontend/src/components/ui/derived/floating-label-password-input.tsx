@@ -85,23 +85,23 @@ function FloatingLabelPasswordInput<T extends FieldValues>({
                   {showPassword ? "Hide password" : "Show password"}
                 </span>
               </Button>
-            </div>
 
-            <FormLabel
-              className={cn(
-                "absolute text-sm duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-primary-500 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto",
-                {
-                  "-translate-y-4 scale-75": props.placeholder,
-                  "peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4":
-                    !props.placeholder,
-                  "opacity-60": props.readOnly,
-                },
-                labelClassName
-              )}
-              showColorsState={showColorsState}
-            >
-              {label}
-            </FormLabel>
+              <FormLabel
+                className={cn(
+                  "absolute text-sm duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-primary-500 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto",
+                  {
+                    "-translate-y-4 scale-75": props.placeholder,
+                    "peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4":
+                      !props.placeholder,
+                    "opacity-60": props.readOnly,
+                  },
+                  labelClassName
+                )}
+                showColorsState={showColorsState}
+              >
+                {label}
+              </FormLabel>
+            </div>
 
             {showErrors && hasError && (
               <FormMessage className="text-destructive/80 text-sm mt-1">
