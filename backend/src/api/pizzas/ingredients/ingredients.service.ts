@@ -21,14 +21,6 @@ export function getIngredientById(id: string) {
 }
 
 export function getIngredientsByPizzaId(pizzaId: string) {
-  // return prisma.pizza.findUnique({
-  //   where: {
-  //     id: pizzaId,
-  //   },
-  //   include: {
-  //     ingredients: true,
-  //   },
-  // });
 
   return prisma.ingredient.findMany({
     where: {
