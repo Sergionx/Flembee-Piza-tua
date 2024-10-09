@@ -25,12 +25,17 @@ export async function getPizzaByIdHandler(req: Request, res: Response) {
 
     res.json(pizza);
   } catch (error) {
-    res.status(500).json({ error: "Ocurrió un error al buscar la pizza" });
+    res.status(500).json({ message: "Ocurrió un error al buscar la pizza" });
   }
 }
 
 export async function createPizzaHandler(req: Request, res: Response) {
   const { pizza, ingredients } = req.body;
+
+  if (!pizza) {
+    res.status(400).json({ message: "Asegúrate de proveer una pizza" });
+    return;
+  }
 
   if (pizza.name.length < 4) {
     res
@@ -57,7 +62,7 @@ export async function createPizzaHandler(req: Request, res: Response) {
   } catch (error) {
     res
       .status(500)
-      .json({ error: "Ocurrión un error al crear la pizza, intenta de nuevo" });
+      .json({ message: "Ocurrión un error al crear la pizza, intenta de nuevo" });
   }
 }
 

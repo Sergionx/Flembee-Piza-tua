@@ -37,12 +37,12 @@ export async function updateUserHandler(req: Request, res: Response) {
   if (lastName.length < 4) {
     res
       .status(400)
-      .json({ error: "El apellido debe ser 4 caracteres como mínimo" });
+      .json({ message: "El apellido debe ser 4 caracteres como mínimo" });
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    res.status(400).json({ error: "Formato del email inválido" });
+    res.status(400).json({ message: "Formato del email inválido" });
     return;
   }
 
@@ -53,7 +53,7 @@ export async function updateUserHandler(req: Request, res: Response) {
   } catch (error) {
     res
       .status(500)
-      .json({ error: "An error occurred while updating the user" });
+      .json({ message: "An error occurred while updating the user" });
   }
 }
 
@@ -66,6 +66,6 @@ export async function deleteUserHandler(req: Request, res: Response) {
   } catch (error) {
     res
       .status(500)
-      .json({ error: "An error occurred while deleting the user" });
+      .json({ message: "An error occurred while deleting the user" });
   }
 }
