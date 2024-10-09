@@ -1,10 +1,16 @@
 "use server";
+
 export async function customFetch(url: string, options: RequestInit = {}) {
+  const {headers, ...rest} = options
+
+  const combinedHeaders = new Headers({
+    'Content-Type': 'application/json',
+    ...headers,
+  })
+
   const response = await fetch(`${process.env.BACKEND_URL}/${url}`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    ...options,
+    headers: combinedHeaders,
+    ...rest,
   });
 
   if (!response.ok) {
@@ -14,3 +20,4 @@ export async function customFetch(url: string, options: RequestInit = {}) {
 
   return response;
 }
+
