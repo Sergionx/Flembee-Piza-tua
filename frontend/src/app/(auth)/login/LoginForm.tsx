@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -32,6 +32,7 @@ export function LoginForm() {
   });
 
   const { login: saveLoginData } = useAuth();
+  const router = useRouter();
 
   async function onSubmit(data: LoginSchemaType) {
     try {
@@ -49,7 +50,7 @@ export function LoginForm() {
         description: `Bienvenido, ${fullName}`,
       })
       saveLoginData(token, result.user);
-      redirect("/users");
+      router.push("/users");
     } catch (error: any) {
       toast({
         variant: "destructive",
