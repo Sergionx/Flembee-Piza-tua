@@ -116,7 +116,6 @@ export const columns: ColumnDef<User>[] = [
               <DialogTrigger
                 asChild
                 onClick={() => {
-                  console.log("Editando usuario", user.email);
                   setCurrentDialog(Dialogs.editDialog);
                 }}
               >
