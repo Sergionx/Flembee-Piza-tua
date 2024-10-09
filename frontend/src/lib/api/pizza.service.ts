@@ -23,7 +23,6 @@ export async function createPizza(
   pizza: CreatePizza,
   ingredients: ConnectIngredient[]
 ) {
-  console.log(pizza, ingredients);
   const response = await customFetch("pizzas", {
     method: "POST",
     next: {
