@@ -33,6 +33,7 @@ function FloatingLabelInputField<T extends FieldValues>({
   containerClassname,
   labelClassName,
   className,
+  onChange: onChangeProps,
   showErrors = false,
   showColorsState = true,
   ...props
@@ -66,6 +67,7 @@ function FloatingLabelInputField<T extends FieldValues>({
                   } else {
                     onChange(e);
                   }
+                  onChangeProps?.(e);
                 }}
                 placeholder={props.placeholder ?? " "}
                 {...props}
