@@ -11,6 +11,7 @@ import { jwtDecode } from "jwt-decode";
 import type { JWToken, JWTokenPayload } from "@/lib/interfaces/JWToken";
 import type { User } from "@/lib/interfaces/User";
 import { getUserById } from "@/lib/api/users.service";
+import { useRouter } from "next/navigation";
 
 interface AuthContextProps {
   token: JWToken | null;
@@ -35,6 +36,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
 
+  const router = useRouter();
+
   useEffect(() => {
     const storedAccessToken = localStorage.getItem("accessToken");
     const storedRefreshToken = localStorage.getItem("refreshToken");
@@ -47,6 +50,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       };
       setToken(parsedToken);
       const decodedToken = jwtDecode<JWTokenPayload>(parsedToken.accessToken);
+
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (decodedToken.exp < currentTime) {
+        router.push("/login");
+        return;
+      }
+
       const user = await getUserById(decodedToken.userId);
 
       setUser(user);
