@@ -5,6 +5,7 @@ import ingredientRoutes from '@/api/pizzas/ingredients/ingredients.routes'
 import pizzaRoutes from '@/api/pizzas/pizzas/pizzas.routes'
 import userRoutes from '@/api/users/users.routes'
 import authRoutes from '@/api/auth/auth.routes'
+import orderRoutes from "@/api/orders/orders.routes"; // Import order routes
 
 const PORT = 3001	
 
@@ -16,6 +17,7 @@ app.use('/api/ingredients', ingredientRoutes)
 app.use('/api/pizzas', pizzaRoutes)
 app.use('/api/users', userRoutes)
 app.use('/api/auth', authRoutes)
+app.use("/api/orders", orderRoutes); 
 
 app.listen(PORT)
 console.log(`Server is running on port ${PORT}`)
