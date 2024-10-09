@@ -79,6 +79,7 @@ export default function IngredientInput({
       <Button
         size="icon"
         variant="outline"
+        type="button"
         onClick={() => remove(index)}
         className="ml-auto border-destructive shrink-0"
         disabled={lenFields === 1}

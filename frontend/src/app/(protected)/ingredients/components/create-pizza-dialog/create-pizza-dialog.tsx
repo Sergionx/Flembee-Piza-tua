@@ -9,7 +9,7 @@ import {
   type CreatePizzaSchemaType,
 } from "./schema";
 import { toast } from "@/hooks/use-toast";
-import { createPizza } from "@/lib/api/piza.service";
+import { createPizza } from "@/lib/api/pizza.service";
 
 import {
   DialogContent,
@@ -28,7 +28,7 @@ import IngredientInput from "./ingredient-input";
 import { Unit } from "@/lib/interfaces/Ingredient";
 import type { Option } from "@/components/ui/derived/autocomplete";
 
-
+// TODO - Cuando se selecciona una opción, quitarla: Usar un custom hook para eso
 export default function CreatePizzaDialog({
   ingredientsOption,
   close,
@@ -104,6 +104,7 @@ export default function CreatePizzaDialog({
                 <Button
                   variant="outline"
                   size="icon"
+                  type="button"
                   className="text-success border-success"
                   onClick={() =>
                     append({
