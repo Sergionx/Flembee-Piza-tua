@@ -28,6 +28,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  orders       Order[]
+
   refreshTokens RefreshToken[]
 }
 
@@ -68,6 +70,7 @@ model Pizza {
   name        String
   
   ingredients PizzaIngredient[]
+  orders      OrderItem[]
 }
 
 model PizzaIngredient {
@@ -81,4 +84,38 @@ model PizzaIngredient {
   ingredient  Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
 
   @@unique([pizzaId, ingredientId])
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  total       Float
+  createdAt   DateTime @default(now())
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  orderItems  OrderItem[]
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  quantity    Float
+  price       Float
+
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id])
+  pizzaId     String
+  pizza       Pizza    @relation(fields: [pizzaId], references: [id])
+}
+
+enum Direction {
+  FORWARD
+  BACKWARD
+}
+
+model UnitConversion {
+  id          String   @id @default(cuid())
+  from        Unit
+  to          Unit
+  factor      Float
+  direction   Direction
 }
