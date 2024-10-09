@@ -27,7 +27,7 @@ export async function register(req: Request, res: Response) {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    res.status(400).json({ error: "Formato del email inválido" });
+    res.status(400).json({ message: "Formato del email inválido" });
     return;
   }
 
