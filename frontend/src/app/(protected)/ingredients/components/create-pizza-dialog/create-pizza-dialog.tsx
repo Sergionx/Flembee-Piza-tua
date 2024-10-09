@@ -9,7 +9,7 @@ import {
   type CreatePizzaSchemaType,
 } from "./schema";
 import { toast } from "@/hooks/use-toast";
-import { createPizza } from "@/lib/api/pizza.service";
+import { createPizza } from "@/lib/api/pizzas.service";
 
 import {
   DialogContent,
