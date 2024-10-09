@@ -62,13 +62,14 @@ export function getAllPizzas() {
         )
       ) AS ingredients,
       SUM(
-        CASE
-          WHEN i.unit = 'KG' AND pi.unit = 'G' THEN i.price * (pi.quantity / 1000)
-          WHEN i.unit = 'G' AND pi.unit = 'KG' THEN i.price * (pi.quantity * 1000)
-          WHEN i.unit = 'L' AND pi.unit = 'ML' THEN i.price * (pi.quantity / 1000)
-          WHEN i.unit = 'ML' AND pi.unit = 'L' THEN i.price * (pi.quantity * 1000)
-          ELSE i.price * pi.quantity
-        END
+        i.price * pi.quantity *
+        COALESCE(
+          CASE
+            WHEN uc.direction = 'FORWARD' THEN uc.factor
+            WHEN uc.direction = 'BACKWARD' THEN 1 / uc.factor
+            ELSE 1
+          END, 1
+        )
       ) AS price
     FROM 
       public."Pizza" p
@@ -76,6 +77,11 @@ export function getAllPizzas() {
       public."PizzaIngredient" pi ON p.id = pi."pizzaId"
     JOIN 
       public."Ingredient" i ON pi."ingredientId" = i."id"
+    LEFT JOIN
+      public."UnitConversion" uc ON (
+        (i.unit = uc."from" AND pi.unit = uc."to") OR
+        (i.unit = uc."to" AND pi.unit = uc."from")
+      )
     GROUP BY
       p.id
   `;
