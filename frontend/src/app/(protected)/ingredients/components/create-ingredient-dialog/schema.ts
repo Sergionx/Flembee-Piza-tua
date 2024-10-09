@@ -21,5 +21,5 @@ export const defaultValues: CreateIngredientSchemaType = {
   name: "",
   price: 0,
   stock: 0,
-  unit: Unit.G,
+  unit: Unit.KG,
 };

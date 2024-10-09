@@ -31,7 +31,7 @@ export type CreatePizzaSchemaType = z.infer<typeof createPizzaSchema>;
 
 export const defaultValues: CreatePizzaSchemaType = {
   name: "",
-  ingredients: Array(3).fill({
+  ingredients: Array(5).fill({
     ingredientOption: {
       label: "",
       value: "",
