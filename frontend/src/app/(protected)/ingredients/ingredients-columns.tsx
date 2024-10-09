@@ -2,6 +2,9 @@
 import { useState } from "react";
 import { MoreHorizontal, Pencil, Trash } from "lucide-react";
 
+import { round } from "@/lib/numbers";
+import { cn } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -12,11 +15,11 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 
-import type { ColumnDef } from "@tanstack/react-table";
-import type { Ingredient } from "@/lib/interfaces/Ingredient";
-import { cn } from "@/lib/utils";
 import DeleteIngredienteDialog from "./components/delete-ingredient-dialog";
 import EditIngredientDialog from "./components/edit-ingredient-dialog/edit-ingredient-dialog";
+
+import type { ColumnDef } from "@tanstack/react-table";
+import type { Ingredient } from "@/lib/interfaces/Ingredient";
 
 export const columns: ColumnDef<Ingredient>[] = [
   {
@@ -49,7 +52,7 @@ export const columns: ColumnDef<Ingredient>[] = [
 
       return (
         <div className={cn("text-center", unitColor)}>
-          {stock}
+          {round(stock, 2)}
           {"  "}
 
           {unit}
