@@ -8,8 +8,8 @@ export function createIngredient(ingredient: CreateIngredient) {
   });
 }
 
-export function getAllIngredients(){
-  return prisma.ingredient.findMany()
+export function getAllIngredients() {
+  return prisma.ingredient.findMany();
 }
 
 export function getIngredientById(id: string) {
@@ -41,14 +41,14 @@ export function getIngredientsByPizzaId(pizzaId: string) {
   });
 }
 
-type UpdatePizza = Partial<CreateIngredient> ;
+type UpdatePizza = Partial<CreateIngredient>;
 export function updateIngredient(id: string, pizza: UpdatePizza) {
   return prisma.ingredient.update({
     where: {
       id,
     },
-    data: pizza
-  })
+    data: pizza,
+  });
 }
 
 export function deleteIngredient(id: string) {

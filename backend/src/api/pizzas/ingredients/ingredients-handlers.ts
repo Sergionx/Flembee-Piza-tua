@@ -57,7 +57,6 @@ export async function createIngredientHandler(req: Request, res: Response) {
   }
 }
 
-//TODO - Tomar en cuenta que pasa cuando se actualiza una unidad
 export async function updateIngredientHandler(req: Request, res: Response) {
   const { id } = req.params;
   const { name, stock, price, unit } = req.body;
