@@ -1,7 +1,10 @@
 "use server";
 import { revalidateTag } from "next/cache";
-import type { DataPizza } from "@/app/(protected)/ingredients/components/production-dialog/production-dialog";
+
 import { customFetch } from "@/lib/fetch";
+
+import type { DataPizza } from "@/app/(protected)/ingredients/components/production-dialog/production-dialog";
+import type { Order } from "@/lib/interfaces/Order";
 
 export async function createOrder(
   order: { pizzas: Record<string, DataPizza> },
