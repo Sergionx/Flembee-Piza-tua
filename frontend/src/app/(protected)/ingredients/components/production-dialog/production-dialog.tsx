@@ -72,8 +72,8 @@ export default function ProductionDialog({
         description: `Ha creado la orden ${result.id} con el total de ${result.total}$`,
       });
 
-      // form.reset();
-      // close();
+      form.reset();
+      close();
     } catch (error: any) {
       toast({
         variant: "destructive",
