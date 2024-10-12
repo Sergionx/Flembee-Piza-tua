@@ -1,5 +1,5 @@
 import express from "express";
-import "tsconfig-paths/register";
+import 'module-alias/register';
 
 import ingredientRoutes from "@/api/pizzas/ingredients/ingredients.routes";
 import pizzaRoutes from "@/api/pizzas/pizzas/pizzas.routes";
