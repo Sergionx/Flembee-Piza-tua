@@ -139,6 +139,13 @@ frontend/
 recetas.xlsx
 ```
 
+En cuanto a las rutas del frontend se encuentran:
+- /users
+- /ingredients
+- /stats
+- /login
+- /register
+
 ## Scripts Disponibles
 
 ### Backend
